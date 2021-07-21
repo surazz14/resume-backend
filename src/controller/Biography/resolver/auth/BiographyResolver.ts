@@ -7,12 +7,10 @@ import {
   Query,
 } from "type-graphql";
 
-import {
-  CreateBiographyInput,
-  PersonalInfoInputType,
-  MainSkillsInputType,
-} from "../../input/CreateBiographyInput";
+import { CreateBiographyInput } from "../../input/CreateBiographyInput";
 import { Biography, MainSkills, PersonInfo } from "../../../../entity";
+
+import { createWriteStream } from "fs";
 
 @ObjectType()
 class MainSkillsResponse {
@@ -61,6 +59,10 @@ class BiographyResponse {
   @Field(() => PersonalInfoResponse, { nullable: true })
   personalInfo?: PersonalInfoResponse;
   @Field({ nullable: true })
+  image1?: string;
+  @Field({ nullable: true })
+  image2?: string;
+  @Field({ nullable: true })
   success: boolean;
   @Field({ nullable: true })
   originalError?: string;
@@ -83,8 +85,24 @@ export class BiographyResolver {
     @Arg("data") data: CreateBiographyInput
   ): Promise<BiographyResponse> {
     try {
-      const { title, description, subDescription, mainSkills, personalInfo } =
-        data;
+      const {
+        title,
+        description,
+        subDescription,
+        mainSkills,
+        personalInfo,
+        image1,
+      } = data;
+      if (image1) {
+        const { filename, mimetype, createReadStream } = await image1;
+        const image = new Promise(async (resolve, reject) =>
+          createReadStream()
+            .pipe(createWriteStream(__dirname + `/../../../images/${filename}`))
+            .on("finish", () => resolve(true))
+            .on("error", () => reject(false))
+        );
+        console.log("this is image", image);
+      }
 
       const mainSkillData = MainSkills.create({ ...mainSkills });
       await mainSkillData.save();

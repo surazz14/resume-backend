@@ -1,5 +1,6 @@
 import { isPhoneNumber } from "class-validator";
 import { Field, InputType } from "type-graphql";
+import { FileUpload, GraphQLUpload } from "graphql-upload";
 
 @InputType()
 export class PersonalInfoInputType {
@@ -47,9 +48,9 @@ export class CreateBiographyInput {
   description: string;
   @Field()
   subDescription: string;
+  @Field(() => GraphQLUpload, { nullable: true })
+  image1: FileUpload;
+  @Field(() => GraphQLUpload, { nullable: true })
+  image2: FileUpload;
 }
 
-// title image1 image2 description subDescription
-
-// personalInfo
-// header, description, name, phoneNumber,email,linkedin,github,location
