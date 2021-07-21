@@ -12,7 +12,7 @@ import {
   PersonalInfoInputType,
   MainSkillsInputType,
 } from "../../input/CreateBiographyInput";
-import { Biography,MainSkills,PersonInfo } from "../../../../entity";
+import { Biography, MainSkills, PersonInfo } from "../../../../entity";
 
 @ObjectType()
 class MainSkillsResponse {
@@ -86,25 +86,21 @@ export class BiographyResolver {
       const { title, description, subDescription, mainSkills, personalInfo } =
         data;
 
-      const mainSkillData = MainSkills.create({...mainSkills});
-      await mainSkillData.save()
-      const personalInfoData = PersonInfo.create({...personalInfo});
-      await personalInfoData.save()
+      const mainSkillData = MainSkills.create({ ...mainSkills });
+      await mainSkillData.save();
+      const personalInfoData = PersonInfo.create({ ...personalInfo });
+      await personalInfoData.save();
       const biography = Biography.create({
         title,
         description,
         subDescription,
         personalInfo: personalInfoData,
-        mainSkills: mainSkillData
-      })
+        mainSkills: mainSkillData,
+      });
       await biography.save();
 
       return {
-        title: title,
-        description: description,
-        subDescription: subDescription,
-        mainSkills: mainSkills,
-        personalInfo: personalInfo,
+        ...data,
         success: true,
       };
     } catch (error) {
@@ -149,7 +145,6 @@ export class BiographyResolver {
 //   }
 // }
 
-
 // mutation RegisterMutation($title: String!="suraj"
 // $description:String!="ss" $subDescription:String! = "abc" $mainSkills:MainSkillsInputType={header1: "abc",header2:"abcde",
 // skills:["hello","hy"] values:["test","test1"]}) {
@@ -167,8 +162,6 @@ export class BiographyResolver {
 //     }
 //   }
 // }
-
-
 
 // mutation RegisterMutation($title: String!="suraj"
 // $description:String!="ss" $subDescription:String! = "abc" $mainSkills:MainSkillsInputType={header1: "abc",header2:"abcde",
