@@ -81,7 +81,7 @@ class BiographyListResponse {
 @Resolver()
 export class BiographyResolver {
   @Mutation(() => BiographyResponse)
-  async register(
+  async biography(
     @Arg("data") data: CreateBiographyInput
   ): Promise<BiographyResponse> {
     try {
@@ -132,7 +132,9 @@ export class BiographyResolver {
 
   @Query(() => BiographyListResponse)
   async biograohies(): Promise<BiographyListResponse> {
-    const biographies: any = await Biography.find();
+    const biographies: any = await Biography.find({
+      relations: ["mainSkills","personalInfo"],
+    });
     return {
       biographies,
       success: true,
